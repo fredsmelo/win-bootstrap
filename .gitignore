@@ -1,0 +1,13 @@
+.DS_Store
+*.local
+.env
+.env.*
+node_modules/
+.vscode/
+.idea/
+.claude/
+
+# Personal configs / overlay -- mantidos fora do repo publico.
+# Apenas configs/example.conf eh versionado como template.
+configs/*
+!configs/example.conf
