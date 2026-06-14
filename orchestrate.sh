@@ -140,6 +140,15 @@ if [ -n "$LID_AC" ] && [ -n "$LID_DC" ]; then
     run_remote_with_args power-lid.ps1 "-OnAC $LID_AC -OnDC $LID_DC"
 fi
 
+# 6c. Language config (per-device, opt-in via conf flags)
+if [ -n "$LANGUAGES" ]; then
+    LANG_ARRAY="$(echo "$LANGUAGES" | awk -F, '{for (i=1;i<=NF;i++) printf "%s\"%s\"", (i>1?",":""), $i}')"
+    LANG_ARGS="-Languages $LANG_ARRAY"
+    [ -n "$KB_LAYOUT" ] && LANG_ARGS="$LANG_ARGS -KeyboardLayout $KB_LAYOUT"
+    [ -n "$DISPLAY_LANG" ] && LANG_ARGS="$LANG_ARGS -DisplayLanguage $DISPLAY_LANG"
+    run_remote_with_args language-config.ps1 "$LANG_ARGS"
+fi
+
 # 7. Hardening (idempotente)
 if [ "$SKIP_HARDENING" != "true" ]; then
     run_remote remove-bloatware.ps1

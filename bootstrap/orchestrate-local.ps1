@@ -98,6 +98,15 @@ if ($env:LID_AC -and $env:LID_DC) {
     RunRemoteWithArgs "power-lid.ps1" @{ OnAC = $env:LID_AC; OnDC = $env:LID_DC }
 }
 
+# 6c. Language config (per-device, opt-in via $env:LANGUAGES env vars)
+if ($env:LANGUAGES) {
+    $langs = $env:LANGUAGES -split ','
+    $langArgs = @{ Languages = $langs }
+    if ($env:KB_LAYOUT)     { $langArgs.KeyboardLayout  = $env:KB_LAYOUT }
+    if ($env:DISPLAY_LANG)  { $langArgs.DisplayLanguage = $env:DISPLAY_LANG }
+    RunRemoteWithArgs "language-config.ps1" $langArgs
+}
+
 # 7. Hardening
 RunRemote "remove-bloatware.ps1"
 RunRemote "harden-taskbar.ps1"

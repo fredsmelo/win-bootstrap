@@ -22,6 +22,7 @@ bootstrap/
     ├── tailscale-up.ps1 # install + connect Tailscale (param: -AuthKey)
     ├── touchscreen.ps1  # disable/enable touchscreen (param: -Action)
     ├── power-lid.ps1    # acao do lid AC+DC (param: -OnAC, -OnDC)
+    ├── language-config.ps1   # linguas + teclado + display (param: -Languages, -KeyboardLayout, -DisplayLanguage)
     ├── quick-access.ps1 # reseta pinned Quick Access (param: -Paths)
     ├── remove-bloatware.ps1
     ├── harden-taskbar.ps1
@@ -89,6 +90,9 @@ APPS='@(...)'                # PS array literal
 DISABLE_TOUCHSCREEN=true|false
 LID_AC=nothing|sleep|hibernate|shutdown    # opt-in: lid plugado
 LID_DC=nothing|sleep|hibernate|shutdown    # opt-in: lid bateria
+LANGUAGES="en-US,pt-BR"                    # opt-in: CSV BCP-47
+KB_LAYOUT=00020409                          # opt-in: layout hex (US International default)
+DISPLAY_LANG=pt-BR                          # opt-in: UI language (efeito pos sign-out)
 SKIP_HARDENING=true|false
 SKIP_WIN_UPDATE=true|false
 SKIP_INSTALL_APPS=true|false
