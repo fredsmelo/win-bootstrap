@@ -72,9 +72,9 @@ for ($i = 1; $i -lt $Languages.Count; $i++) {
 foreach ($lang in $list) {
     $tag = $lang.LanguageTag
     try {
-        $lcid = (Get-Culture -Name $tag).LCID.ToString('X4')
+        $lcid = ([System.Globalization.CultureInfo]::new($tag)).LCID.ToString('X4')
     } catch {
-        Write-Host "    WARN: LCID nao resolvido pra $tag. Skip." -ForegroundColor Yellow
+        Write-Host "    WARN: LCID nao resolvido pra $tag ($($_.Exception.Message)). Skip." -ForegroundColor Yellow
         continue
     }
     $ime = "${lcid}:${KeyboardLayout}"
