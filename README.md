@@ -21,6 +21,8 @@ bootstrap/
     ├── install-apps.ps1 # winget installs (param: -Apps array, hashtables OK)
     ├── tailscale-up.ps1 # install + connect Tailscale (param: -AuthKey)
     ├── touchscreen.ps1  # disable/enable touchscreen (param: -Action)
+    ├── power-lid.ps1    # acao do lid AC+DC (param: -OnAC, -OnDC)
+    ├── quick-access.ps1 # reseta pinned Quick Access (param: -Paths)
     ├── remove-bloatware.ps1
     ├── harden-taskbar.ps1
     ├── clean-desktop.ps1
@@ -85,6 +87,8 @@ Config per-device em `configs/<host>.conf` (sourced bash):
 ```bash
 APPS='@(...)'                # PS array literal
 DISABLE_TOUCHSCREEN=true|false
+LID_AC=nothing|sleep|hibernate|shutdown    # opt-in: lid plugado
+LID_DC=nothing|sleep|hibernate|shutdown    # opt-in: lid bateria
 SKIP_HARDENING=true|false
 SKIP_WIN_UPDATE=true|false
 SKIP_INSTALL_APPS=true|false

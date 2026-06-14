@@ -93,12 +93,18 @@ if ($DisableTouchscreen) {
     RunRemoteWithArgs "touchscreen.ps1" @{ Action = "disable" }
 }
 
+# 6b. Lid action (per-device, opt-in via $env:LID_AC + $env:LID_DC)
+if ($env:LID_AC -and $env:LID_DC) {
+    RunRemoteWithArgs "power-lid.ps1" @{ OnAC = $env:LID_AC; OnDC = $env:LID_DC }
+}
+
 # 7. Hardening
 RunRemote "remove-bloatware.ps1"
 RunRemote "harden-taskbar.ps1"
 RunRemote "clean-desktop.ps1"
 RunRemote "tweaks-qol.ps1"
 RunRemote "start-menu.ps1"
+RunRemote "quick-access.ps1"
 
 # 8. Inventario final
 Step "$env:COMPUTERNAME :: inventory final"

@@ -135,6 +135,11 @@ if [ "$DISABLE_TOUCHSCREEN" == "true" ]; then
     run_remote_with_args touchscreen.ps1 "-Action disable"
 fi
 
+# 6b. Lid action (per-device, opt-in via conf flags)
+if [ -n "$LID_AC" ] && [ -n "$LID_DC" ]; then
+    run_remote_with_args power-lid.ps1 "-OnAC $LID_AC -OnDC $LID_DC"
+fi
+
 # 7. Hardening (idempotente)
 if [ "$SKIP_HARDENING" != "true" ]; then
     run_remote remove-bloatware.ps1
@@ -142,6 +147,7 @@ if [ "$SKIP_HARDENING" != "true" ]; then
     run_remote clean-desktop.ps1
     run_remote tweaks-qol.ps1
     run_remote start-menu.ps1
+    run_remote quick-access.ps1
 fi
 
 # 8. Final inventory pra confirmar estado
