@@ -196,8 +196,26 @@ try {
 }
 
 try {
+    # Filtros de ruido: services que flipam Running/Stopped constantemente ou
+    # tem GUID per-sessao rotacional. Mantem sinal real (install/remove/misbehave).
+    # Ajustar aqui se mais ruido aparecer nos commits do state repo.
+    $noisePatterns = @(
+        '^cbdhsvc_[0-9a-f]+$',                       # per-session GUID (ClipboardUserService)
+        '^CDPUserSvc_[0-9a-f]+$',                    # per-session GUID (ConnectedDevicesPlatform)
+        '^GoogleUpdater(Internal)?Service[\d.]+$',   # polling Running/Stopped
+        '^edgeupdate$',                              # polling Running/Stopped
+        '^gpsvc$',                                   # Group Policy dorme
+        '^DellClientManagementService$',             # StartPending/Running boot timing
+        '^MapsBroker$',                              # polling
+        '^WaaSMedicSvc$'                             # Windows Update Medic polling
+    )
+
     $services = @(Get-Service |
         Where-Object { $_.StartType -eq 'Automatic' } |
+        Where-Object {
+            $name = $_.Name
+            -not ($noisePatterns | Where-Object { $name -match $_ })
+        } |
         Sort-Object Name |
         ForEach-Object { @{ name = $_.Name; status = $_.Status.ToString() } })
 
