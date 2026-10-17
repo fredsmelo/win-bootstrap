@@ -195,6 +195,23 @@ try {
     Log "apps collection skip: $($_.Exception.Message)"
 }
 
+# 3a-ii. Complementa com AppX direto (apps Store instalados sem passar pelo winget).
+# Get-WinGetPackage so lista o que winget indexa; apps instalados diretamente pela MS
+# Store (ex: Unigram) ficam invisiveis. Get-AppxPackage roda em PS 5.1 nativo.
+# Merge: entries do winget vencem (trazem source), AppX so entra se id nao existe.
+try {
+    $storeApps = @(Get-AppxPackage -AllUsers -ErrorAction SilentlyContinue |
+        Where-Object { $_.SignatureKind -eq 'Store' -and -not $_.IsFramework } |
+        ForEach-Object { @{ id = $_.Name; version = $_.Version; source = 'msstore-appx' } })
+
+    $byId = @{}
+    foreach ($a in $apps)      { if ($a.id) { $byId[$a.id] = $a } }
+    foreach ($a in $storeApps) { if ($a.id -and -not $byId.ContainsKey($a.id)) { $byId[$a.id] = $a } }
+    $apps = @($byId.Values | Sort-Object { $_.id })
+} catch {
+    Log "appx augment skip: $($_.Exception.Message)"
+}
+
 try {
     # Filtros de ruido: services que flipam Running/Stopped constantemente ou
     # tem GUID per-sessao rotacional. Mantem sinal real (install/remove/misbehave).
